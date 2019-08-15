@@ -15,7 +15,9 @@ import "C"
 //export tray_callback
 func tray_callback(itemId C.int) {
 	if itemId < 0 {
-		log.Println("tray click")
+		if leftClick != nil {
+			leftClick()
+		}
 		return
 	}
 

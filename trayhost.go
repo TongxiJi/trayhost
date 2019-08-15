@@ -22,6 +22,7 @@ import (
 import "C"
 
 var menuItems []MenuItem
+var leftClick func()
 
 // MenuItem is a menu item.
 type MenuItem struct {
@@ -55,6 +56,10 @@ func Initialize(title string, imageData []byte, items []MenuItem) {
 	for id, item := range menuItems {
 		addItem(id, item)
 	}
+}
+
+func TrayLeftClick(handler func()) {
+	leftClick = handler
 }
 
 // EnterLoop enters main loop.
