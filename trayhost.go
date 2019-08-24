@@ -1,6 +1,11 @@
 package trayhost
 
 import (
+	"golang.org/x/text/encoding/simplifiedchinese"
+	"golang.org/x/text/transform"
+	"io/ioutil"
+	"runtime"
+	"strings"
 	"time"
 	"unsafe"
 )
@@ -44,6 +49,11 @@ type MenuItem struct {
 // Initialize sets up the application properties.
 // imageData is the icon image in PNG format.
 func Initialize(title string, imageData []byte, items []MenuItem) {
+	if runtime.GOOS == "windows" {
+		reader := transform.NewReader(strings.NewReader(title), simplifiedchinese.GBK.NewEncoder())
+		titleGbkBytes, _ := ioutil.ReadAll(reader)
+		title = string(titleGbkBytes)
+	}
 	cTitle := C.CString(title)
 	defer C.free(unsafe.Pointer(cTitle))
 	img, freeImg := create_image(Image{Kind: "png", Bytes: imageData})
